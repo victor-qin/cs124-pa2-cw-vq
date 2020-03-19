@@ -35,8 +35,9 @@ def strassenHelper(m1, m2):
 
     # Compute size of submatrix
     resultSize = len(m1)
-    subSize = resultSize / 2
+    subSize = int(resultSize / 2)
 
+    # Conventional multiplication if dimension 1
     if(resultSize <= 1):
         return matmult(m1, m2)
     else:
