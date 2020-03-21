@@ -1,6 +1,7 @@
 import math
 import time
 import random
+from conventional_v0 import matmult
 
 
 def subtractMatrix(m1, m2):
@@ -11,10 +12,10 @@ def subtractMatrix(m1, m2):
             result[i][j] = m1[i][j] - m2[i][j]
     return result
 
-
 def addMatrix(m1, m2):
     dim = len(m1)
     result = [[0 for i in range(dim)] for j in range(dim)]
+
     for i in range(dim):
         for j in range(dim):
             result[i][j] = m1[i][j] + m2[i][j]
@@ -38,10 +39,16 @@ def strassenHelper(m1, m2):
     resultSize = len(m1)
     subSize = int(resultSize / 2)
 
+        # print(m1)
+        # print(subS)
+
     # Conventional multiplication if dimension 1
     if(resultSize <= 1):
         return matmult(m1, m2)
     else:
+        flag = resultSize % 2 != 0 and resultSize != 1
+        if(flag):
+            subSize += 1
 
         a = m1[:subSize]
         b = m1[:subSize]
@@ -52,6 +59,12 @@ def strassenHelper(m1, m2):
         g = m2[subSize:]
         h = m2[subSize:]
 
+        if(flag):
+            c.append([])
+            d.append([])
+            g.append([])
+            h.append([])
+
         for i in range(subSize):
             a[i] = a[i][:subSize]
             b[i] = b[i][subSize:]
@@ -61,6 +74,20 @@ def strassenHelper(m1, m2):
             f[i] = f[i][subSize:]
             g[i] = g[i][:subSize]
             h[i] = h[i][subSize:]
+
+        if(flag):
+            for i in range(subSize):
+                b[i].append(0)
+                d[i].append(0)
+                f[i].append(0)
+                h[i].append(0)
+
+                c[-1].append(0)
+                d[-1].append(0)
+                g[-1].append(0)
+                h[-1].append(0)
+            h[-1] = h[-1][0:-1]
+
         # Divide each matrix into four submatrices
         # a = [[0 for i in range(subSize)] for j in range(subSize)]
         # b = [[0 for i in range(subSize)] for j in range(subSize)]
@@ -83,6 +110,7 @@ def strassenHelper(m1, m2):
         #         h[i][j] = m2[i + subSize][j + subSize]
 
         # Compute 7 products of Strassen's algorithm
+
         p1 = strassenHelper(a, subtractMatrix(f, h))
         p2 = strassenHelper(addMatrix(a, b), h)
         p3 = strassenHelper(addMatrix(c, d), e)
@@ -100,12 +128,25 @@ def strassenHelper(m1, m2):
             addMatrix(p5, p1), p3), p7)  # p5 + p1 - p3 - p7
 
         # Copy results into result matrix
+        # print(aebg)
+        # print(afbh)
+        # result = aebg + afbh
+        # print(result)
+        # result = result + (cedg + cfdh)
+
         result = []
         for i in range(subSize):
             result.append(aebg[i] + afbh[i])
         for i in range(subSize):
             result.append(cedg[i] + cfdh[i])
+        # print(resultSize, "result", result)
+        if(resultSize % 2 != 0 and resultSize != 1):
+            for i in range(resultSize):
+                result[i] = result[i][0:-1]
+            result = result[0:-1]
+        # print("result", len(result))
 
+        # print(result)
 
         # result = [[0 for i in range(resultSize)] for j in range(resultSize)]
         # for i in range(subSize):
@@ -136,7 +177,8 @@ def strassen(m1, m2):
     # print(duration)
 
     # Multiplication using Strassen's alg
-    multResult = strassenHelper(pad1, pad2)
+    # multResult = strassenHelper(pad1, pad2)
+    multResult = strassenHelper(m1, m2)
 
     # Reduce matrix size to original dimensions
     finalResult = [[0 for i in range(originalDim)] for j in range(originalDim)]
@@ -145,7 +187,7 @@ def strassen(m1, m2):
             finalResult[i][j] = multResult[i][j]
 
     stop = time.time()
-    print(stop - start)
+    # print(stop - start)
     return finalResult
 
 def make_mat(dim):
@@ -167,3 +209,4 @@ if __name__ == "__main__":
     m2 = make_mat(50)
 
     print(strassen(m1, m2))
+    print(matmult(m1, m2))
