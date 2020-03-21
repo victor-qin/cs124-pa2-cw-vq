@@ -65,11 +65,11 @@ def strassenHelper(m1, m2):
         g = m2[subSize:]
         h = m2[subSize:]
 
-        # if(flag):
-        #     c.append([])
-        #     d.append([])
-        #     g.append([])
-        #     h.append([])
+        if(flag):
+            c.append([])
+            d.append([])
+            g.append([])
+            h.append([])
 
         for i in range(subSize):
             a[i] = a[i][:subSize]
@@ -82,26 +82,18 @@ def strassenHelper(m1, m2):
             h[i] = h[i][subSize:]
 
         if(flag):
-            temp = []
-            for i in range(subSize-1):
+            for i in range(subSize):
                 b[i].append(0)
                 d[i].append(0)
                 f[i].append(0)
                 h[i].append(0)
-                temp.append(0)
-            temp.append(0)
-            c.append(temp)
-            d.append(temp)
-            g.append(temp)
-            h.append(temp)
 
-
-            #     c[-1].append(0)
-            #     d[-1].append(0)
-            #     g[-1].append(0)
-            #     h[-1].append(0)
-            # d[-1] = d[-1][0:-1]
-            # h[-1] = h[-1][0:-1]
+                c[-1].append(0)
+                d[-1].append(0)
+                g[-1].append(0)
+                h[-1].append(0)
+            d[-1] = d[-1][0:-1]
+            h[-1] = h[-1][0:-1]
 
         # Divide each matrix into four submatrices
         # a = [[0 for i in range(subSize)] for j in range(subSize)]
