@@ -3,32 +3,38 @@ import time
 import random
 from conventional_v0 import matmult
 
-
 def subtractMatrix(m1, m2):
     dim = len(m1)
-    result = [[0 for i in range(dim)] for j in range(dim)]
+    result = []
+
     for i in range(dim):
+        result.append([])
         for j in range(dim):
-            result[i][j] = m1[i][j] - m2[i][j]
+            result[i].append(m1[i][j] - m2[i][j])
     return result
 
 def addMatrix(m1, m2):
     dim = len(m1)
-    result = [[0 for i in range(dim)] for j in range(dim)]
+    result = []
 
     for i in range(dim):
+        result.append([])
         for j in range(dim):
-            result[i][j] = m1[i][j] + m2[i][j]
+            result[i].append(m1[i][j] + m2[i][j])
     return result
 
 
 def matmult(m1, m2):
     """ Conventional matrix multiplication algorithm. """
     dim = len(m1)
-    result = [[0 for i in range(dim)] for j in range(dim)]
+    # result = [[0 for i in range(dim)] for j in range(dim)]
+
+    result = []
     for i in range(dim):
-        for k in range(dim):
-            for j in range(dim):
+        result.append([])
+        for j in range(dim):
+            result[i].append(0)
+            for k in range(dim):
                 result[i][j] += m1[i][k] * m2[k][j]
     return result
 
@@ -59,11 +65,11 @@ def strassenHelper(m1, m2):
         g = m2[subSize:]
         h = m2[subSize:]
 
-        if(flag):
-            c.append([])
-            d.append([])
-            g.append([])
-            h.append([])
+        # if(flag):
+        #     c.append([])
+        #     d.append([])
+        #     g.append([])
+        #     h.append([])
 
         for i in range(subSize):
             a[i] = a[i][:subSize]
@@ -76,17 +82,26 @@ def strassenHelper(m1, m2):
             h[i] = h[i][subSize:]
 
         if(flag):
-            for i in range(subSize):
+            temp = []
+            for i in range(subSize-1):
                 b[i].append(0)
                 d[i].append(0)
                 f[i].append(0)
                 h[i].append(0)
+                temp.append(0)
+            temp.append(0)
+            c.append(temp)
+            d.append(temp)
+            g.append(temp)
+            h.append(temp)
 
-                c[-1].append(0)
-                d[-1].append(0)
-                g[-1].append(0)
-                h[-1].append(0)
-            h[-1] = h[-1][0:-1]
+
+            #     c[-1].append(0)
+            #     d[-1].append(0)
+            #     g[-1].append(0)
+            #     h[-1].append(0)
+            # d[-1] = d[-1][0:-1]
+            # h[-1] = h[-1][0:-1]
 
         # Divide each matrix into four submatrices
         # a = [[0 for i in range(subSize)] for j in range(subSize)]
@@ -187,7 +202,7 @@ def strassen(m1, m2):
             finalResult[i][j] = multResult[i][j]
 
     stop = time.time()
-    # print(stop - start)
+    print(stop - start)
     return finalResult
 
 def make_mat(dim):
@@ -205,8 +220,19 @@ if __name__ == "__main__":
     # m1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     # m2 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
 
-    m1 = make_mat(50)
-    m2 = make_mat(50)
+    m1 = make_mat(100)
+    m2 = make_mat(100)
 
-    print(strassen(m1, m2))
-    print(matmult(m1, m2))
+    stras = strassen(m1, m2)
+    conv = matmult(m1, m2)
+    for i in range(len(m1)):
+        for j in range(len(m1)):
+            if(stras[i][j] != conv[i][j]):
+                print("ERRORRR")
+                break
+
+    #print(strassen(m1, m2))
+    # start = time.time()
+    # print(matmult(m1, m2))
+    # stop = time.time()
+    # print(stop - start)
