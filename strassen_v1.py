@@ -1,7 +1,6 @@
 import math
 import time
 import random
-from conventional_v0 import matmult
 
 
 def subtractMatrix(m1, m2):
@@ -99,13 +98,105 @@ def strassenHelper(m1, m2):
                 h[i].append(0)
 
         # Compute 7 products of Strassen's algorithm
-        p1 = strassenHelper(a, subtractMatrix(f, h))
-        p2 = strassenHelper(addMatrix(a, b), h)
-        p3 = strassenHelper(addMatrix(c, d), e)
-        p4 = strassenHelper(d, subtractMatrix(g, e))
-        p5 = strassenHelper(addMatrix(a, d), addMatrix(e, h))
-        p6 = strassenHelper(subtractMatrix(b, d), addMatrix(g, h))
-        p7 = strassenHelper(subtractMatrix(a, c), addMatrix(e, f))
+
+        # f - h
+        dim = range(len(f))
+        subfh = []
+
+        for i in dim:
+            subfh.append([])
+            for j in dim:
+                subfh[i].append(f[i][j] - h[i][j])
+
+        # a + b
+        dim = range(len(a))
+        addab = []
+
+        for i in dim:
+            addab.append([])
+            for j in dim:
+                addab[i].append(a[i][j] + b[i][j])
+
+        # c + d
+        dim = range(len(c))
+        addcd = []
+
+        for i in dim:
+            addcd.append([])
+            for j in dim:
+                addcd[i].append(c[i][j] + d[i][j])
+
+        # g - e
+        dim = range(len(g))
+        subge = []
+
+        for i in dim:
+            subge.append([])
+            for j in dim:
+                subge[i].append(g[i][j] - e[i][j])
+
+        # a + d
+        dim = range(len(a))
+        addad = []
+
+        for i in dim:
+            addad.append([])
+            for j in dim:
+                addad[i].append(a[i][j] + d[i][j])
+
+        # e + h
+        dim = range(len(e))
+        addeh = []
+
+        for i in dim:
+            addeh.append([])
+            for j in dim:
+                addeh[i].append(e[i][j] + h[i][j])
+
+        # b - d
+        dim = range(len(b))
+        subbd = []
+
+        for i in dim:
+            subbd.append([])
+            for j in dim:
+                subbd[i].append(b[i][j] - d[i][j])
+
+        # g + h
+        dim = range(len(g))
+        addgh = []
+
+        for i in dim:
+            addgh.append([])
+            for j in dim:
+                addgh[i].append(g[i][j] + h[i][j])
+
+        # a - c
+        dim = range(len(a))
+        subac = []
+
+        for i in dim:
+            subac.append([])
+            for j in dim:
+                subac[i].append(a[i][j] - c[i][j])
+
+        # e + f
+        dim = range(len(g))
+        addef = []
+
+        for i in dim:
+            addef.append([])
+            for j in dim:
+                addef[i].append(e[i][j] + f[i][j])
+
+        p1 = strassenHelper(a, subfh)  # p1 = a(f - h)
+        p2 = strassenHelper(addab, h)  # p2 = (a + b)h
+        p3 = strassenHelper(addcd, e)  # p3 = (c + d)e
+        p4 = strassenHelper(d, subge)  # p4 = d(g - e)
+        # p5 = (a + d)(e + h)
+        p5 = strassenHelper(addad, addeh)
+        p6 = strassenHelper(subbd, addgh)  # p6 = (b - d)(g + h)
+        p7 = strassenHelper(subac, addef)  # p7 = (a - c)(e + f)
 
         # Compute four quadrants of result matrix
         aebg = addMatrix(subtractMatrix(addMatrix(p5, p4), p2),
@@ -137,34 +228,17 @@ def strassen(m1, m2):
     start = time.time()
     # Determine new padded dimension
     originalDim = len(m1)
-    newDim = 2 ** int(math.ceil(math.log(originalDim, 2)))
-
-    pad1 = [[0 for i in range(newDim)] for j in range(newDim)]
-    pad2 = [[0 for i in range(newDim)] for j in range(newDim)]
-
-    # TODO - omit copying over all values manually?
-    for i in range(originalDim):
-        for j in range(originalDim):
-            pad1[i][j] = m1[i][j]
-            pad2[i][j] = m2[i][j]
 
     # Multiplication using Strassen's alg
-    # multResult = strassenHelper(pad1, pad2)
     multResult = strassenHelper(m1, m2)
 
-    # Reduce matrix size to original dimensions
-    finalResult = [[0 for i in range(originalDim)] for j in range(originalDim)]
-    for i in range(originalDim):
-        for j in range(originalDim):
-            finalResult[i][j] = multResult[i][j]
-
     stop = time.time()
-    print("Internal Duration: ", stop - start)
-    return finalResult
+    totalTime = stop - start
+    return multResult, totalTime
 
 
 def make_mat(dim):
-
+    """ Create random 0, 1 matrix of specified dimension. """
     out = []
 
     for i in range(dim):
@@ -176,13 +250,18 @@ def make_mat(dim):
 
 
 if __name__ == "__main__":
-    # m1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    # m2 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
 
-    m1 = make_mat(100)
-    m2 = make_mat(100)
+    m1 = make_mat(40)
+    m2 = make_mat(40)
+    numTrials = 5
 
-    stras = strassen(m1, m2)
+    # Run for numTrials and compute avg time
+    totalTime = 0
+    for i in range(numTrials):
+        stras, trialTime = strassen(m1, m2)
+        totalTime += trialTime
+    avgTime = totalTime / numTrials
+    print("Average time: %f" % avgTime)
 
     conv = matmult(m1, m2)
     for i in range(len(m1)):
