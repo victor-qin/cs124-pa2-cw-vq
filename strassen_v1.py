@@ -54,7 +54,8 @@ def strassenHelper(m1, m2):
             subSize += 1
         sub = range(subSize)
         res = range(resultSize)
-        #
+
+        # slice off half of rows
         a = m1[:subSize]
         b = m1[:subSize]
         c = m1[subSize:]
@@ -64,7 +65,7 @@ def strassenHelper(m1, m2):
         g = m2[subSize:]
         h = m2[subSize:]
 
-        # print(c)
+        # if buffer append in a row
         if(flag):
             temp = []
             for i in res:
@@ -75,11 +76,7 @@ def strassenHelper(m1, m2):
             g.append(temp)
             h.append(temp)
 
-            # c.append([])
-            # d.append([])
-            # g.append([])
-            # h.append([])
-            # print(c)
+        # slice half of columns
         for i in sub:
             a[i] = a[i][:subSize]
             b[i] = b[i][subSize:]
@@ -90,25 +87,15 @@ def strassenHelper(m1, m2):
             g[i] = g[i][:subSize]
             h[i] = h[i][subSize:]
 
-
-
+        # if flag add extra column
         if(flag):
-
             for i in sub:
                 b[i].append(0)
                 d[i].append(0)
                 f[i].append(0)
                 h[i].append(0)
 
-            #     c[-1].append(0)
-            #     d[-1].append(0)
-            #     g[-1].append(0)
-            #     h[-1].append(0)
-            # d[-1] = d[-1][0:-1]
-            # h[-1] = h[-1][0:-1]
-
         # Compute 7 products of Strassen's algorithm
-
         p1 = strassenHelper(a, subtractMatrix(f, h))
         p2 = strassenHelper(addMatrix(a, b), h)
         p3 = strassenHelper(addMatrix(c, d), e)
@@ -125,19 +112,14 @@ def strassenHelper(m1, m2):
         cfdh = subtractMatrix(subtractMatrix(
             addMatrix(p5, p1), p3), p7)  # p5 + p1 - p3 - p7
 
-        # Copy results into result matrix
-        # print(aebg)
-        # print(afbh)
-        # result = aebg + afbh
-        # print(result)
-        # result = result + (cedg + cfdh)
-
+        # make results matrix
         result = []
         for i in sub:
             result.append(aebg[i] + afbh[i])
         for i in sub:
             result.append(cedg[i] + cfdh[i])
-        # print(resultSize, "result", result)
+
+        # if odd take out extra column and row
         if(resultSize % 2 != 0 and resultSize != 1):
             for i in res:
                 result[i] = result[i][0:-1]
@@ -162,7 +144,6 @@ def strassen(m1, m2):
         for j in range(originalDim):
             pad1[i][j] = m1[i][j]
             pad2[i][j] = m2[i][j]
-    # print(duration)
 
     # Multiplication using Strassen's alg
     # multResult = strassenHelper(pad1, pad2)
@@ -175,7 +156,7 @@ def strassen(m1, m2):
             finalResult[i][j] = multResult[i][j]
 
     stop = time.time()
-    print(stop - start)
+    print("Internal Duration: ", stop - start)
     return finalResult
 
 def make_mat(dim):
@@ -197,15 +178,10 @@ if __name__ == "__main__":
     m2 = make_mat(100)
 
     stras = strassen(m1, m2)
+
     conv = matmult(m1, m2)
     for i in range(len(m1)):
         for j in range(len(m1)):
             if(stras[i][j] != conv[i][j]):
                 print("ERRORRR")
                 break
-
-    #print(strassen(m1, m2))
-    # start = time.time()
-    # print(matmult(m1, m2))
-    # stop = time.time()
-    # print(stop - start)
