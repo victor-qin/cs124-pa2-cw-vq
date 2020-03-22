@@ -3,6 +3,7 @@ import time
 import random
 from conventional_v0 import matmult
 
+
 def subtractMatrix(m1, m2):
     dim = range(len(m1))
     result = []
@@ -12,6 +13,7 @@ def subtractMatrix(m1, m2):
         for j in dim:
             result[i].append(m1[i][j] - m2[i][j])
     return result
+
 
 def addMatrix(m1, m2):
     dim = range(len(m1))
@@ -89,8 +91,6 @@ def strassenHelper(m1, m2):
             f[i] = f[i][subSize:]
             g[i] = g[i][:subSize]
             h[i] = h[i][subSize:]
-
-
 
         if(flag):
 
@@ -178,6 +178,7 @@ def strassen(m1, m2):
     print(stop - start)
     return finalResult
 
+
 def make_mat(dim):
 
     out = []
@@ -185,9 +186,10 @@ def make_mat(dim):
     for i in range(dim):
         out.append([])
         for j in range(dim):
-            out[i].append(random.randint(0,1))
+            out[i].append(random.randint(0, 1))
 
     return out
+
 
 if __name__ == "__main__":
     # m1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]

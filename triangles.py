@@ -1,5 +1,5 @@
 from random import choices
-from strassen import strassen
+from strassen_v1 import strassen
 
 
 def graphGen(dim, p):
@@ -24,7 +24,7 @@ def triangles(dim, p):
 if __name__ == "__main__":
     # Edit dims, probabilities, numTrials here
     dim = 1024
-    probs = [0.01, 0.02, 0.03, 0.04, 0.05]
+    probs = [0.01]
     numTrials = 5
 
     # Compute average number of triangles for given parameters
