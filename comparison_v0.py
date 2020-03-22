@@ -6,7 +6,7 @@ from strassen_v1 import subtractMatrix, addMatrix, matmult, strassenHelper, stra
 
 def main():
 
-    dimension = range(400, 401)
+    dimension = range(700, 1501, 100)
     flag = 0
     # make matrices
     for dim in dimension:
@@ -17,10 +17,10 @@ def main():
         start = time.time()
         conv = matmult(mat1, mat2)
         stop = time.time()
-        duration = stop - start
-        print("Conventional: ", duration)
+        duration_conv = stop - start
+        print("Conventional: ", duration_conv)
 
-        timeout = duration + 60
+        timeout = duration_conv + 60
 
         start = time.time()
         stras = multiprocessing.Process(target = strassen, args = (mat1, mat2, ), name="strassen")
@@ -32,17 +32,15 @@ def main():
             print('Function terminated')
             stras.terminate()
             stras.join()
-        else:
-            print('LIMIT FOUND: ', dim)
-            flag = 1
+
 
 
         stop = time.time()
-        duration = stop - start
-        print("Strassen: ", duration)
+        duration_stras = stop - start
+        print("Strassen: ", duration_stras)
 
-        if(flag):
-            print("Terminating: ", dim)
+        if(duration_stras < duration_conv):
+            print("CROSSOVER FOUND Terminating: ", dim)
             break
 
     return 0
