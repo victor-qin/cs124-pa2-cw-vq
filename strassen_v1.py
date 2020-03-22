@@ -89,10 +89,8 @@ def strassenHelper(m1, m2):
             g[i] = g[i][:subSize]
             h[i] = h[i][subSize:]
 
-<<<<<<< HEAD
-=======
         # if flag add extra column
->>>>>>> eaafc039a40a0ab3071327d36637af993cdcf5b7
+
         if(flag):
             for i in sub:
                 b[i].append(0)
