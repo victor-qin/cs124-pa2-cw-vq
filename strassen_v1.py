@@ -47,7 +47,7 @@ def strassenHelper(m1, m2):
     subSize = int(resultSize / 2)
 
     # Conventional multiplication if dimension 1
-    if(resultSize <= 1):
+    if(resultSize <= 8):
         return matmult(m1, m2)
     else:
         # Check if matrix is odd - buffer if so

@@ -6,7 +6,7 @@ from strassen_v1 import subtractMatrix, addMatrix, matmult, strassenHelper, stra
 
 def main():
 
-    dimension = range(700, 1501, 100)
+    dimension = range(100, 101)
     flag = 0
     # make matrices
     for dim in dimension:
