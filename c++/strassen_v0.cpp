@@ -49,18 +49,18 @@ void strassen(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dim
   // Get half size of matrix dimension
   int halfDim = int(dimension / 2);
 
-  // If we're at base case return
-  if(dimension <= 16){
-    mat_mult(mat1, mat2, output, dimension);
-    return;
-  }
-
   // check if we need padding
   int flag = 0;
   int fronthalfDim = halfDim;
   if(dimension % 2 != 0 && dimension != 1){
     flag = 1;
     fronthalfDim += 1;
+  }
+
+  // If we're at base case return
+  if((flag && dimension <= 38) || (!flag && dimension <= 16)){
+    mat_mult(mat1, mat2, output, dimension);
+    return;
   }
 
   // define a second output vector, resize our old one
@@ -115,8 +115,6 @@ void strassen(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dim
     copy(mat2.begin() + (halfDim*dimension), mat2.begin() + (halfDim*dimension + fronthalfDim), e.begin() + (halfDim*fronthalfDim));
     copy(mat2.begin() + (halfDim*dimension + fronthalfDim), mat2.begin() + ((halfDim+1)*dimension), f.begin() + (halfDim*fronthalfDim));
   }
-
-
 
   // define the 7 products of Strassen
   vector<int> p1;
@@ -191,7 +189,7 @@ void strassen(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dim
 int main(){
 
   // Define your dimensions
-  const int dimension = 128;
+  const int dimension = 500;
 
   // Define your matrices
   vector<int> mat1;
@@ -215,13 +213,6 @@ int main(){
       mat2[i*dimension + j] = distribution(generator);
     }
   }
-
-  // cout << "mat 1" << endl;
-  // print_mat(mat1, dimension);
-  // cout<< endl;
-  // cout << "mat 2" << endl;
-  // print_mat(mat2, dimension);
-  // cout<< endl;
 
   vector<int> conv;
   conv.resize(dimension*dimension);
