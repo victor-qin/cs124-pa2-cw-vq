@@ -6,6 +6,7 @@
 using namespace std;
 using namespace std::chrono;
 
+// matrix printing function for readability and debugging
 void print_mat(vector<int> &mat, int dimension)
 {
   for (int i = 0; i < dimension; i++)
@@ -18,6 +19,7 @@ void print_mat(vector<int> &mat, int dimension)
   }
 }
 
+// base case of conventional matrix multiplication
 void mat_mult(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dimension)
 {
   for (int i = 0; i < dimension; i++)
@@ -26,17 +28,15 @@ void mat_mult(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dim
     {
       for (int k = 0; k < dimension; k++)
       {
-        // cout << mat1[i*dimension + k] << "  " << mat2[k*dimension + j] << endl;
         output[i * dimension + j] += mat1[i * dimension + k] * mat2[k * dimension + j];
-        // cout << "output1  " << output[i*dimension + j] << endl;
       }
     }
   }
 }
 
+// subtracting matrices
 void subtract_mat(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dimension)
 {
-
   for (int i = 0; i < dimension; i++)
   {
     for (int j = 0; j < dimension; j++)
@@ -46,6 +46,7 @@ void subtract_mat(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int
   }
 }
 
+// adding matrices
 void add_mat(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dimension)
 {
   for (int i = 0; i < dimension; i++)
@@ -57,6 +58,7 @@ void add_mat(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dime
   }
 }
 
+// main strassen function
 void strassen(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dimension)
 {
 
@@ -72,7 +74,7 @@ void strassen(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dim
     fronthalfDim += 1;
   }
 
-  // If we're at base case return
+  // If we're at base case return conventional multiplication
   if ((flag && dimension <= 38) || (!flag && dimension <= 16))
   {
     mat_mult(mat1, mat2, output, dimension);
@@ -102,8 +104,6 @@ void strassen(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dim
   g.resize(fronthalfDim * fronthalfDim);
   vector<int> h;
   h.resize(fronthalfDim * fronthalfDim);
-
-  // cout << halfDim << "\t" << fronthalfDim << "\t" << dimension << endl;
 
   // use copy to get the parts of the matrices - specific sections to be copied
   for (int i = 0; i < halfDim; i++)
@@ -150,7 +150,7 @@ void strassen(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dim
   vector<int> p7;
   p7.resize(fronthalfDim * fronthalfDim);
 
-  // calculate the values, recursion step
+  // calculate the 7 values, recursion step
   subtract_mat(f, h, output1, fronthalfDim);
   strassen(a, output1, p1, fronthalfDim);
 
@@ -204,62 +204,61 @@ void strassen(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dim
   }
 }
 
-int main()
-{
-
-  // Define your dimensions
-  const int dimension = 500;
-
-  // Define your matrices
-  vector<int> mat1;
-  mat1.resize(dimension * dimension);
-  vector<int> mat2;
-  mat2.resize(dimension * dimension);
-  vector<int> output;
-  output.resize(dimension * dimension);
-
-  // Define your random number generator
-  unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine generator(seed);
-  std::uniform_int_distribution<int> distribution(0, 1);
-
-  // Fill in random values for matrices
-  for (int i = 0; i < dimension; i++)
-  {
-    for (int j = 0; j < dimension; j++)
-    {
-      // mat1[i*dimension + j] = 1;
-      // mat2[i*dimension + j] = 1;
-      mat1[i * dimension + j] = distribution(generator);
-      mat2[i * dimension + j] = distribution(generator);
-    }
-  }
-
-  vector<int> conv;
-  conv.resize(dimension * dimension);
-
-  auto start = high_resolution_clock::now();
-  mat_mult(mat1, mat2, conv, dimension);
-  auto stop = high_resolution_clock::now();
-  auto duration = duration_cast<microseconds>(stop - start);
-  // cout << duration.count() * 0.000001 << endl;
-
-  cout << "conventional, duration: " << duration.count() * 0.000001 << endl;
-  // print_mat(conv, dimension);
-  cout << endl;
-
-  start = high_resolution_clock::now();
-  strassen(mat1, mat2, output, dimension);
-  stop = high_resolution_clock::now();
-  duration = duration_cast<microseconds>(stop - start);
-
-  cout << "strassen, duration: " << duration.count() * 0.000001 << endl;
-  // print_mat(output, dimension);
-
-  // copy(mat1.begin(), mat1.begin() + dimension, output.begin());
-  // print_mat(mat1, dimension);
-  // cout << endl;
-  // print_mat(output, dimension);
-
-  return 0;
-}
+// int main()
+// {
+//
+//   // Define your dimensions
+//   const int dimension = 75;
+//
+//   // Define your matrices
+//   vector<int> mat1;
+//   mat1.resize(dimension * dimension);
+//   vector<int> mat2;
+//   mat2.resize(dimension * dimension);
+//   vector<int> output;
+//   output.resize(dimension * dimension);
+//
+//   // Define your random number generator
+//   unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+//   std::default_random_engine generator(seed);
+//   std::uniform_int_distribution<int> distribution(0, 1);
+//
+//   // Fill in random values for matrices
+//   for (int i = 0; i < dimension; i++)
+//   {
+//     for (int j = 0; j < dimension; j++)
+//     {
+//       mat1[i * dimension + j] = distribution(generator);
+//       mat2[i * dimension + j] = distribution(generator);
+//     }
+//   }
+//
+//   // timing conventional
+//   vector<int> conv;
+//   conv.resize(dimension * dimension);
+//
+//   auto start = high_resolution_clock::now();
+//   mat_mult(mat1, mat2, conv, dimension);
+//   auto stop = high_resolution_clock::now();
+//   auto duration = duration_cast<microseconds>(stop - start);
+//   cout << "conventional, duration: " << duration.count() * 0.000001 << endl;
+//
+//   // timing strassens
+//   start = high_resolution_clock::now();
+//   strassen(mat1, mat2, output, dimension);
+//   stop = high_resolution_clock::now();
+//   duration = duration_cast<microseconds>(stop - start);
+//   cout << "strassen, duration: " << duration.count() * 0.000001 << endl;
+//
+//   // check for errors between the two multiplications
+//   for(int i = 0; i < dimension; i++){
+//     for(int j = 0; j < dimension; j++){
+//       if(conv[i*dimension + j] != output[i*dimension + j]){
+//         cout << "ERROR************" << endl;
+//         break;
+//       }
+//     }
+//   }
+//
+//   return 0;
+// }

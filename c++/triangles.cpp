@@ -12,9 +12,9 @@ void graphGen(vector<int> &matrix, int dim, float p)
     // Generates graph with dim vertices, edge probability p.
 
     // Define random number generator
-    // unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-    // std::default_random_engine generator(seed);
-    std::default_random_engine generator;
+    unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
+    // std::default_random_engine generator;
     std::bernoulli_distribution distribution(p);
 
     // Fill in random values for matrices
@@ -85,6 +85,7 @@ int main()
         }
         avg = avg / numTrials;
         cout << "Average number of triangles, probability " << probs[i] << ": " << avg << endl;
+        cout << "Expected number of triangles: " << 178433024 * (probs[i]*probs[i]*probs[i]) << endl;
     }
 
     return 0;
