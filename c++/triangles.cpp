@@ -61,13 +61,8 @@ int main()
 {
     // Edit dims, probabilities, numTrials here
     int dim = 1024;
-    // std::array<float, 5> probs = {0.01, 0.02, 0.03, 0.04, 0.05};
+    std::array<float, 5> probs = {0.01, 0.02, 0.03, 0.04, 0.05};
     double numTrials = 5;
-
-    // Test values
-    dim = 1024;
-    std::array<float, 1> probs = {0.01};
-    numTrials = 1;
 
     // Initialize adjacency, output matrices
     vector<int> matrix;
@@ -85,7 +80,7 @@ int main()
         }
         avg = avg / numTrials;
         cout << "Average number of triangles, probability " << probs[i] << ": " << avg << endl;
-        cout << "Expected number of triangles: " << 178433024 * (probs[i]*probs[i]*probs[i]) << endl;
+        cout << "Expected number of triangles: " << 178433024 * (probs[i] * probs[i] * probs[i]) << endl;
     }
 
     return 0;
