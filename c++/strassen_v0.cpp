@@ -63,16 +63,6 @@ void strassen(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dim
   // Get half size of matrix dimension
   int halfDim = int(dimension / 2);
 
-<<<<<<< HEAD
-  // If we're at base case return
-  if (dimension <= 16)
-  {
-    mat_mult(mat1, mat2, output, dimension);
-    return;
-  }
-
-=======
->>>>>>> 5214daa5d82493fcbfa8f81b2588636727a62d82
   // check if we need padding
   int flag = 0;
   int fronthalfDim = halfDim;
@@ -83,7 +73,8 @@ void strassen(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dim
   }
 
   // If we're at base case return
-  if((flag && dimension <= 38) || (!flag && dimension <= 16)){
+  if ((flag && dimension <= 38) || (!flag && dimension <= 16))
+  {
     mat_mult(mat1, mat2, output, dimension);
     return;
   }
@@ -213,104 +204,39 @@ void strassen(vector<int> &mat1, vector<int> &mat2, vector<int> &output, int dim
   }
 }
 
-<<<<<<< HEAD
-// int main()
-// {
-
-//   // Define your dimensions
-//   const int dimension = 128;
-
-//   // Define your matrices
-//   vector<int> mat1;
-//   mat1.resize(dimension * dimension);
-//   vector<int> mat2;
-//   mat2.resize(dimension * dimension);
-//   vector<int> output;
-//   output.resize(dimension * dimension);
-
-//   // Define your random number generator
-//   unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-//   std::default_random_engine generator(seed);
-//   std::uniform_int_distribution<int> distribution(0, 1);
-
-//   // Fill in random values for matrices
-//   for (int i = 0; i < dimension; i++)
-//   {
-//     for (int j = 0; j < dimension; j++)
-//     {
-//       // mat1[i*dimension + j] = 1;
-//       // mat2[i*dimension + j] = 1;
-//       mat1[i * dimension + j] = distribution(generator);
-//       mat2[i * dimension + j] = distribution(generator);
-//     }
-//   }
-
-//   // cout << "mat 1" << endl;
-//   // print_mat(mat1, dimension);
-//   // cout<< endl;
-//   // cout << "mat 2" << endl;
-//   // print_mat(mat2, dimension);
-//   // cout<< endl;
-
-//   vector<int> conv;
-//   conv.resize(dimension * dimension);
-
-//   auto start = high_resolution_clock::now();
-//   mat_mult(mat1, mat2, conv, dimension);
-//   auto stop = high_resolution_clock::now();
-//   auto duration = duration_cast<microseconds>(stop - start);
-//   // cout << duration.count() * 0.000001 << endl;
-
-//   cout << "conventional, duration: " << duration.count() * 0.000001 << endl;
-//   // print_mat(conv, dimension);
-//   cout << endl;
-
-//   start = high_resolution_clock::now();
-//   strassen(mat1, mat2, output, dimension);
-//   stop = high_resolution_clock::now();
-//   duration = duration_cast<microseconds>(stop - start);
-
-//   cout << "strassen, duration: " << duration.count() * 0.000001 << endl;
-//   // print_mat(output, dimension);
-
-//   // copy(mat1.begin(), mat1.begin() + dimension, output.begin());
-//   // print_mat(mat1, dimension);
-//   // cout << endl;
-//   // print_mat(output, dimension);
-
-//   return 0;
-// }
-=======
-int main(){
+int main()
+{
 
   // Define your dimensions
   const int dimension = 500;
 
   // Define your matrices
   vector<int> mat1;
-  mat1.resize(dimension*dimension);
+  mat1.resize(dimension * dimension);
   vector<int> mat2;
-  mat2.resize(dimension*dimension);
+  mat2.resize(dimension * dimension);
   vector<int> output;
-  output.resize(dimension*dimension);
+  output.resize(dimension * dimension);
 
   // Define your random number generator
   unsigned seed = chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator(seed);
-  std::uniform_int_distribution<int> distribution(0,1);
+  std::uniform_int_distribution<int> distribution(0, 1);
 
   // Fill in random values for matrices
-  for(int i = 0; i < dimension; i++){
-    for(int j = 0; j < dimension; j++){
+  for (int i = 0; i < dimension; i++)
+  {
+    for (int j = 0; j < dimension; j++)
+    {
       // mat1[i*dimension + j] = 1;
       // mat2[i*dimension + j] = 1;
-      mat1[i*dimension + j] = distribution(generator);
-      mat2[i*dimension + j] = distribution(generator);
+      mat1[i * dimension + j] = distribution(generator);
+      mat2[i * dimension + j] = distribution(generator);
     }
   }
 
   vector<int> conv;
-  conv.resize(dimension*dimension);
+  conv.resize(dimension * dimension);
 
   auto start = high_resolution_clock::now();
   mat_mult(mat1, mat2, conv, dimension);
@@ -327,7 +253,7 @@ int main(){
   stop = high_resolution_clock::now();
   duration = duration_cast<microseconds>(stop - start);
 
-  cout<< "strassen, duration: " << duration.count() * 0.000001 << endl;
+  cout << "strassen, duration: " << duration.count() * 0.000001 << endl;
   // print_mat(output, dimension);
 
   // copy(mat1.begin(), mat1.begin() + dimension, output.begin());
@@ -337,4 +263,3 @@ int main(){
 
   return 0;
 }
->>>>>>> 5214daa5d82493fcbfa8f81b2588636727a62d82
