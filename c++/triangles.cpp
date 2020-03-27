@@ -1,14 +1,14 @@
+#include <array>
+#include <chrono>
 #include <iostream>
 #include <random>
-#include <chrono>
-#include <array>
+
 #include "strassen_v0.cpp"
 
 using namespace std;
 using namespace std::chrono;
 
-void graphGen(vector<int> &matrix, int dim, float p)
-{
+void graphGen(vector<int>& matrix, int dim, float p) {
     // Generates graph with dim vertices, edge probability p.
 
     // Define random number generator
@@ -18,16 +18,11 @@ void graphGen(vector<int> &matrix, int dim, float p)
     std::bernoulli_distribution distribution(p);
 
     // Fill in random values for matrices
-    for (int i = 0; i < dim; i++)
-    {
-        for (int j = 0; j < dim; j++)
-        {
-            if (i == j)
-            {
+    for (int i = 0; i < dim; i++) {
+        for (int j = 0; j < dim; j++) {
+            if (i == j) {
                 matrix[i * dim + j] = 0;
-            }
-            else
-            {
+            } else {
                 matrix[i * dim + j] = distribution(generator);
             }
         }
@@ -35,8 +30,7 @@ void graphGen(vector<int> &matrix, int dim, float p)
     return;
 }
 
-double triangles(vector<int> &matrix, vector<int> &output, int dim, float p)
-{
+double triangles(vector<int>& matrix, vector<int>& output, int dim, float p) {
     // Computes number of triangles in a graph using Strassen's algorithm.
     const double divFactor = 6.0;
 
@@ -49,16 +43,14 @@ double triangles(vector<int> &matrix, vector<int> &output, int dim, float p)
 
     // Add diagonal entries
     double diagSum = 0.0;
-    for (int i = 0; i < dim; i++)
-    {
-        diagSum = diagSum + (double)output[i * dim + i];
+    for (int i = 0; i < dim; i++) {
+        diagSum = diagSum + (double) output[i * dim + i];
     }
-    double numTriangles = (double)diagSum / (double)divFactor;
+    double numTriangles = (double) diagSum / (double) divFactor;
     return numTriangles;
 }
 
-int main()
-{
+int main() {
     // Edit dims, probabilities, numTrials here
     int dim = 1024;
     std::array<float, 5> probs = {0.01, 0.02, 0.03, 0.04, 0.05};
@@ -71,16 +63,16 @@ int main()
     output.resize(dim * dim);
 
     // Compute average number of triangles for given parameters
-    for (int i = 0; i < probs.size(); i++)
-    {
+    for (int i = 0; i < probs.size(); i++) {
         double avg = 0;
-        for (int j = 0; j < numTrials; j++)
-        {
+        for (int j = 0; j < numTrials; j++) {
             avg += triangles(matrix, output, dim, probs[i]);
         }
         avg = avg / numTrials;
-        cout << "Average number of triangles, probability " << probs[i] << ": " << avg << endl;
-        cout << "Expected number of triangles: " << 178433024 * (probs[i] * probs[i] * probs[i]) << endl;
+        cout << "Average number of triangles, probability " << probs[i] << ": "
+             << avg << endl;
+        cout << "Expected number of triangles: "
+             << 178433024 * (probs[i] * probs[i] * probs[i]) << endl;
     }
 
     return 0;
