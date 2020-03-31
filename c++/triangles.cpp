@@ -3,7 +3,7 @@
 #include <iostream>
 #include <random>
 
-#include "strassen_v0.cpp"
+#include "strassen.cpp"
 
 using namespace std;
 using namespace std::chrono;
@@ -19,11 +19,13 @@ void graphGen(vector<int>& matrix, int dim, float p) {
 
     // Fill in random values for matrices
     for (int i = 0; i < dim; i++) {
-        for (int j = 0; j < dim; j++) {
+        for (int j = i; j < dim; j++) {
             if (i == j) {
                 matrix[i * dim + j] = 0;
             } else {
-                matrix[i * dim + j] = distribution(generator);
+                int edgeVal = distribution(generator);
+                matrix[i * dim + j] = edgeVal;
+                matrix[j * dim + i] = edgeVal;
             }
         }
     }
