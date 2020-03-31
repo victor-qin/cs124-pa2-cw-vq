@@ -246,8 +246,8 @@ double triangles(vector<int>& matrix, vector<int>& output, int dim, float p) {
     graphGen(matrix, dim, p);
 
     // Compute A^3
-    strassen(matrix, matrix, output, dim, 36, 63);
-    strassen(matrix, output, output, dim, 36, 63);
+    strassen(matrix, matrix, output, dim, 48, 63);
+    strassen(matrix, output, output, dim, 48, 63);
 
     // Add diagonal entries
     double diagSum = 0.0;
@@ -261,18 +261,28 @@ double triangles(vector<int>& matrix, vector<int>& output, int dim, float p) {
 
 int main(int argc, char *argv[])
 {
+  // define user input things
   int dimension = 0;
   ifstream infile;
   string file = "";
   int option = 0;
-  if(argc >= 2){
+
+  // option 0: strassen.exe 0 [dimension] [text file] - test input
+  // option 1: strassen.exe 1 [dimension] - randomly generate matrix of 0/1, multiply
+  // option 2: strassen.exe 2 - test triangles code
+  if(argc > 1){
+    option = strtol(argv[1], NULL, 10);
+  }
+  if(argc > 2){
 
     // Define your dimensions
     dimension = strtol(argv[2], NULL, 10);
-    file = argv[3];
+  }
+  if(argc > 3){
+      file = argv[3];
   }
 
-  // cout << dimension << "\t" << file << endl;
+  // cout << option << "\t" << dimension << "\t" << file << endl;
   if(option == 0){
     // Define your matrices
     vector<int> mat1;
@@ -300,6 +310,60 @@ int main(int argc, char *argv[])
 
     strassen(mat1, mat2, output, dimension, 43, 45);
     print_diag(output, dimension);
+  } else if(option == 1){
+
+    unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
+    std::uniform_int_distribution<int> distribution(0, 1);
+
+    vector<int> mat1;
+    mat1.resize(dimension * dimension);
+    vector<int> mat2;
+    mat2.resize(dimension * dimension);
+    vector<int> output;
+    output.resize(dimension * dimension);
+    vector<int> conv;
+    conv.resize(dimension * dimension);
+
+    // Timer intializing
+    auto start = high_resolution_clock::now();
+    auto stop = high_resolution_clock::now();
+    auto stras_duration = duration_cast<microseconds>(stop - start);
+    auto conv_duration = duration_cast<microseconds>(stop - start);
+
+    int evlimit = 48;
+    int odlimit = 63;
+    int trials = 5;
+
+    // Running through the trials
+    for(int k = 0; k < trials; k++){
+      // Fill in random values for matrices
+      for(int i = 0; i < dimension; i++)
+      {
+        for (int j = 0; j < dimension; j++)
+        {
+          mat1[i * dimension + j] = distribution(generator);
+          mat2[i * dimension + j] = distribution(generator);
+        }
+      }
+
+      //Testing Conventional step
+      start = high_resolution_clock::now();
+      mat_mult(mat1, mat2, conv, dimension);
+      stop = high_resolution_clock::now();
+      conv_duration += duration_cast<microseconds>(stop - start);
+
+      // Testing Strassen step
+
+      start = high_resolution_clock::now();
+      strassen(mat1, mat2, output, dimension, evlimit, odlimit);
+      stop = high_resolution_clock::now();
+      stras_duration += duration_cast<microseconds>(stop - start);
+    }
+
+    // timing strassens
+    cout << dimension << "\t" << odlimit << "\t" << conv_duration.count() * 0.000001 / (double) trials << "\t" << stras_duration.count() * 0.000001 / (double) trials << endl;
+
   } else if(option == 2){
     // Edit dims, probabilities, numTrials here
     int dim = 1024;
@@ -313,7 +377,7 @@ int main(int argc, char *argv[])
     output.resize(dim * dim);
 
     // Compute average number of triangles for given parameters
-    for (int i = 0; i < probs.size(); i++) {
+    for (int i = 0; i < (int) probs.size(); i++) {
         double avg = 0;
         for (int j = 0; j < numTrials; j++) {
             avg += triangles(matrix, output, dim, probs[i]);

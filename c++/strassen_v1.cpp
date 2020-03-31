@@ -217,7 +217,7 @@ int main()
 
 
   int trials = 5;
-  for(int dimension = 257; dimension <= 513; dimension += 32){
+  for(int dimension = 256; dimension <= 512; dimension += 32){
     // Define your matrices
     vector<int> mat1;
     mat1.resize(dimension * dimension);
@@ -228,9 +228,9 @@ int main()
     vector<int> conv;
     conv.resize(dimension * dimension);
 
-    int evlimit = 48;
+    int odlimit = 63;
 
-    for(int odlimit = 37; odlimit < 77; odlimit+=2){
+    for(int evlimit = 16; evlimit < 20; evlimit+=2){
       // Timer intializing
       auto start = high_resolution_clock::now();
       auto stop = high_resolution_clock::now();
@@ -266,7 +266,7 @@ int main()
       }
 
       // timing strassens
-      cout << dimension << "\t" << odlimit << "\t" << conv_duration.count() * 0.000001 / (double) trials << "\t" << stras_duration.count() * 0.000001 / (double) trials << endl;
+      cout << dimension << "\t" << evlimit << "\t" << conv_duration.count() * 0.000001 / (double) trials << "\t" << stras_duration.count() * 0.000001 / (double) trials << endl;
     }
 
   }
